@@ -1,0 +1,22 @@
+{
+  "name": "tasklist",
+  "version": "1.0.0",
+  "description": "TaskList",
+  "main": "tasklist.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UgotGoosed/TaskList.git"
+  },
+  "author": "Michael Ganschow",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/UgotGoosed/TaskList/issues"
+  },
+  "homepage": "https://github.com/UgotGoosed/TaskList#readme",
+  "dependencies": {
+    "electron": "^1.7.9"
+  }
+}

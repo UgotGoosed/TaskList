@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Task List</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+</head>
+<body>
+  <p id="saved"></p> 
+  <nav>
+    <div class="nav-wrapper">
+      <a class="brand-logo center">Task List</a>  
+    </div>
+  </nav>
+  <ul id="tasks"></ul>
+  <button id='save'>Save File</button>
+  <button id='open'>Open File</button>
+
+
+  <script>
+    const electron = require('electron');
+    const {ipcRenderer} = electron;
+    const ul = document.querySelector('ul');
+    const fs = require('fs');
+    const {dialog} = require('electron').remote;
+
+    
+
+    ipcRenderer.on('item:add', function(e, item){
+      ul.className = 'tasks';
+      const li = document.createElement('li');
+      li.className = 'task-item';
+      const itemText = document.createTextNode(item);
+      li.appendChild(itemText);
+      ul.appendChild(li);
+    });
+    ipcRenderer.on('item:clear', function(){
+      ul.className = '';
+      ul.innerHTML = '';
+    });
+    ul.addEventListener('dblclick', removeItem);
+  function removeItem(e){
+    event.target.remove();
+      if(ul.children.length == 0){
+      ul.className = '';
+    }
+  }
+  function saveFile(){
+  
+  dialog.showSaveDialog((filename) => {
+    if (filename === undefined){
+      alert('No files selected');
+      return;
+    }
+  
+    var tasks = document.getElementById('saved').value
+  
+    fs.writeFile(filename[0], tasks, (err) => {
+      if(err){
+        alert("Cannot update file", err.message);
+        return;
+      }
+      document.getElementById('saved').textContent = 'Save Successful';
+      alert('items saved', tasks);
+              
+    });
+  })
+};
+
+function openFile(){
+
+  dialog.showOpenDialog((filenames) =>{
+    if (filenames === undefined){
+    alert('No files selected');
+    }
+
+   // readFile(filenames[0]);
+  })
+  
+}
+
+function readFile(filepath){
+  fs.readFile(filepath, 'utf-8', (err, data) => {
+    if(err){
+      alert('Error getting your file');
+      return;
+    }
+
+    var textArea = document.getElementById('tasks')
+    textArea.value = data
+  })
+}
+
+document.getElementById('save').addEventListener('click', saveFile)
+document.getElementById('open').addEventListener('click', openFile)
+      
+
+  </script>
+</body>
+</html>
